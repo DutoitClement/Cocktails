@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.myapplication.model.Cocktail
+import com.example.myapplication.data.Cocktail
 
 class CocktailsDetailsActivity : AppCompatActivity() {
 

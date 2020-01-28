@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.myapplication.R
-import com.example.myapplication.model.Cocktail
+import com.example.myapplication.data.Cocktail
 import java.util.*
 
 class CocktailsAdapter(private val context: Context, private val cocktailsList: ArrayList<Cocktail>) : BaseAdapter() {
