@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="welcome">Welcome!</string>
+    <string name="search_indication">If you already know the name of your cocktail and you want to
+    find the recipe, write its name below and let yourself be guided</string>
+    <string name="otherwise_discover_our_cocktails">Otherwise, discover our cocktails</string>
+    <string name="margarita">Margarita</string>
+    <string name="search">Search</string>
+    <string name="no_cocktail_found">No cocktail found</string>
+</resources>
