@@ -4,39 +4,33 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.Cocktail
-import java.util.*
 
-class CocktailsAdapter(private val context: Context, private val cocktailsList: ArrayList<Cocktail>) : BaseAdapter() {
+class CocktailsAdapter(val context: Context, val cocktails: ArrayList<Cocktail>): RecyclerView.Adapter<CocktailsAdapter.ViewHodler>() {
 
-    private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-
-        val itemView = inflater.inflate(R.layout.cocktail_list_item, parent, false)
+    inner class ViewHodler(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         val picture: ImageView = itemView.findViewById(R.id.picture)
         val name: TextView = itemView.findViewById(R.id.name)
-
-        picture.background = context.resources.getDrawable(R.color.black)
-        name.text = cocktailsList.get(position).strDrink
-
-        return itemView
     }
 
-    override fun getItem(position: Int): Any {
-        return cocktailsList.get(position)
+    override fun getItemCount() = cocktails.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHodler {
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(R.layout.cocktail_list_item, parent, false)
+        return ViewHodler(view)
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getCount(): Int {
-        return cocktailsList.size
+    override fun onBindViewHolder(holder: ViewHodler, position: Int) {
+        val cocktail = cocktails.get(position)
+        with(holder) {
+            picture.background = context.resources.getDrawable(R.color.black)
+            name.text = cocktail.strDrink
+        }
     }
 }

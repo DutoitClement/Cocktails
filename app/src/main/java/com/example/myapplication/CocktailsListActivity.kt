@@ -4,12 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.adapter.CocktailsAdapter
 import com.example.myapplication.data.Cocktail
 import com.example.myapplication.viewmodel.CocktailsListViewmodel
@@ -20,7 +21,9 @@ class CocktailsListActivity : AppCompatActivity(), AdapterView.OnItemClickListen
 
     private val cocktailsInSearch = ArrayList<Cocktail>()
 
-    private val cocktailsListView: ListView by lazy { findViewById<ListView>(R.id.cocktailsListView) }
+    private val cocktailsRecyclerView: RecyclerView by lazy { findViewById<RecyclerView>(R.id.cocktailsRecyclerView) }
+    private lateinit var viewManager: RecyclerView.LayoutManager
+
     private val noResultText: TextView by lazy { findViewById<TextView>(R.id.noResultText) }
     private val progressBar: ProgressBar by lazy { findViewById<ProgressBar>(R.id.progressBar) }
 
@@ -29,6 +32,11 @@ class CocktailsListActivity : AppCompatActivity(), AdapterView.OnItemClickListen
         setContentView(R.layout.activity_cocktails_list_navigation_layout)
 
         viewModel = ViewModelProviders.of(this).get(CocktailsListViewmodel::class.java)
+
+        viewManager = LinearLayoutManager(this)
+
+        cocktailsRecyclerView.setHasFixedSize(true)
+        cocktailsRecyclerView.layoutManager = viewManager
 
         if (intent.hasExtra("Search")) {
             viewModel.search.value = intent.getStringExtra("Search")
@@ -57,8 +65,8 @@ class CocktailsListActivity : AppCompatActivity(), AdapterView.OnItemClickListen
         }
 
         if (cocktailsInSearch.size > 1) {
-            cocktailsListView.adapter = CocktailsAdapter(this, cocktailsInSearch)
-            cocktailsListView.onItemClickListener = this
+            cocktailsRecyclerView.adapter = CocktailsAdapter(this, cocktailsInSearch)
+            //cocktailsRecyclerView.onItemClickListener = this
         } else if (cocktailsInSearch.size == 1) {
             goToCocktailDetails(0)
             finish()
