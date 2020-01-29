@@ -42,7 +42,7 @@ class CocktailsListActivity : AppCompatActivity(), AdapterView.OnItemClickListen
         if (viewModel.cocktailsList.value != null) {
             for (cocktail: Cocktail in viewModel.cocktailsList.value!!.iterator()) {
                 if (viewModel.search.value != null && viewModel.search.value != "") {
-                    if(cocktail.name!!.contains(viewModel.search.value!!, true)) {
+                    if(cocktail.strDrink!!.contains(viewModel.search.value!!, true)) {
                         cocktailsInSearch.add(cocktail)
                     }
                 } else {

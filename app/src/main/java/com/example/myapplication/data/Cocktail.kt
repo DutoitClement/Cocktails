@@ -5,7 +5,7 @@ import java.io.Serializable
 
 data class Cocktail (
     val idDrink: String?,
-    @Json(name = "strDrink") val name: String?,
+    @Json(name = "strDrink") val strDrink: String?,
     val strDrinkAlternate: String?,
     val strDrinkES: String?,
     val strDrinkDE: String?,

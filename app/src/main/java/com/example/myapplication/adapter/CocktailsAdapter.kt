@@ -23,7 +23,7 @@ class CocktailsAdapter(private val context: Context, private val cocktailsList: 
         val name: TextView = itemView.findViewById(R.id.name)
 
         picture.background = context.resources.getDrawable(R.color.black)
-        name.text = cocktailsList.get(position).name
+        name.text = cocktailsList.get(position).strDrink
 
         return itemView
     }

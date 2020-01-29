@@ -16,8 +16,12 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class CocktailRepository (val app: Application) {
 
@@ -37,15 +41,16 @@ class CocktailRepository (val app: Application) {
     suspend fun getCocktailData() {
         if (networkAvailable()) {
 
-            val converterFactory = MoshiConverterFactory.create().asLenient()
+            val converterFactory = MoshiConverterFactory.create()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl(COCKTAILS_WEB_SERVICE_URL)
                 .addConverterFactory(converterFactory)
+                .baseUrl(COCKTAILS_WEB_SERVICE_URL)
                 .build()
             val service = retrofit.create(CocktailService::class.java)
-            val serviceData = service.getCocktailData().body() ?: emptyList()
-            cocktailsList.postValue(serviceData)
+            val serviceData = service.getCocktailData().body()
+
+            cocktailsList.postValue(serviceData?.drinks ?: emptyList())
         }
     }
 

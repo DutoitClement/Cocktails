@@ -20,7 +20,7 @@ class CocktailsDetailsActivity : AppCompatActivity() {
             val cocktail: Cocktail = intent.getSerializableExtra("Cocktail") as Cocktail
 
             picture.background = resources.getDrawable(R.color.black)
-            title.text = cocktail.name
+            title.text = cocktail.strDrink
         }
     }
 }
