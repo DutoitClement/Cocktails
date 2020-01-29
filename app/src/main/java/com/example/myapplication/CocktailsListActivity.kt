@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -21,6 +22,7 @@ class CocktailsListActivity : AppCompatActivity(), AdapterView.OnItemClickListen
 
     private val cocktailsListView: ListView by lazy { findViewById<ListView>(R.id.cocktailsListView) }
     private val noResultText: TextView by lazy { findViewById<TextView>(R.id.noResultText) }
+    private val progressBar: ProgressBar by lazy { findViewById<ProgressBar>(R.id.progressBar) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +35,14 @@ class CocktailsListActivity : AppCompatActivity(), AdapterView.OnItemClickListen
         }
 
         viewModel.cocktailsList.observe(this, Observer {
-            initUiElements()
+
+            progressBar.visibility = View.GONE
+
+            updateCocktailsList()
         })
     }
 
-    private fun initUiElements() {
+    private fun updateCocktailsList() {
 
         if (viewModel.cocktailsList.value != null) {
             for (cocktail: Cocktail in viewModel.cocktailsList.value!!.iterator()) {
