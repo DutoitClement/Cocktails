@@ -7,6 +7,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.myapplication.adapter.CocktailsAdapter
 import com.example.myapplication.data.Cocktail
@@ -31,7 +32,9 @@ class CocktailsListActivity : AppCompatActivity(), AdapterView.OnItemClickListen
             viewModel.search.value = intent.getStringExtra("Search")
         }
 
-        initUiElements()
+        viewModel.cocktailsList.observe(this, Observer {
+            initUiElements()
+        })
     }
 
     private fun initUiElements() {
