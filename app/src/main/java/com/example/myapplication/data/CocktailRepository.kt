@@ -3,25 +3,16 @@ package com.example.myapplication.data
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import com.example.myapplication.COCKTAILS_WEB_SERVICE_URL
-import com.example.myapplication.R
-import com.example.myapplication.utilities.FileHelper
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class CocktailRepository (val app: Application) {
 
@@ -31,14 +22,14 @@ class CocktailRepository (val app: Application) {
         List::class.java, Cocktail::class.java
     )
 
-    init {
+    fun refreshCocktailsData(search: String?) {
         CoroutineScope(Dispatchers.IO).launch {
-            getCocktailData()
+            getCocktailData(search)
         }
     }
 
     @WorkerThread
-    suspend fun getCocktailData() {
+    suspend fun getCocktailData(search: String?) {
         if (networkAvailable()) {
 
             val converterFactory = MoshiConverterFactory.create()
@@ -48,9 +39,16 @@ class CocktailRepository (val app: Application) {
                 .baseUrl(COCKTAILS_WEB_SERVICE_URL)
                 .build()
             val service = retrofit.create(CocktailService::class.java)
-            val serviceData = service.getCocktailData().body()
 
-            cocktailsList.postValue(serviceData?.drinks ?: emptyList())
+            val cocktailsData: List<Cocktail>?
+
+            if (search != null) {
+                cocktailsData = service.getCocktailsBySearch(search).body()?.drinks
+            } else {
+                cocktailsData = service.getCocktailsByFirstName("a").body()?.drinks
+            }
+
+            cocktailsList.postValue(cocktailsData ?: emptyList())
         }
     }
 

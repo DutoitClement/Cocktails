@@ -10,6 +10,9 @@ class CocktailsListViewmodel(app: Application) : AndroidViewModel(app) {
 
     private val dataRepository = CocktailRepository(app)
 
-    val search = MutableLiveData<String>()
     val cocktailsList = dataRepository.cocktailsList
+
+    fun refreshCocktailsData(search: String?) {
+        dataRepository.refreshCocktailsData(search)
+    }
 }

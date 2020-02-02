@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.Cocktail
 
-class CocktailsAdapter(val context: Context, val cocktails: ArrayList<Cocktail>): RecyclerView.Adapter<CocktailsAdapter.ViewHodler>() {
+class CocktailsAdapter(val context: Context,
+                       val cocktails: List<Cocktail>,
+                       val onCocktailClickListener: OnCocktailClickListener): RecyclerView.Adapter<CocktailsAdapter.ViewHodler>() {
 
     inner class ViewHodler(itemView: View): RecyclerView.ViewHolder(itemView) {
-
         val picture: ImageView = itemView.findViewById(R.id.picture)
         val name: TextView = itemView.findViewById(R.id.name)
     }
@@ -27,10 +28,16 @@ class CocktailsAdapter(val context: Context, val cocktails: ArrayList<Cocktail>)
     }
 
     override fun onBindViewHolder(holder: ViewHodler, position: Int) {
-        val cocktail = cocktails.get(position)
+        val cocktail = cocktails[position]
         with(holder) {
             picture.background = context.resources.getDrawable(R.color.black)
             name.text = cocktail.strDrink
         }
+
+        holder.itemView.setOnClickListener { onCocktailClickListener.onCocktailClick(position) }
+    }
+
+    interface OnCocktailClickListener {
+        fun onCocktailClick(position: Int)
     }
 }

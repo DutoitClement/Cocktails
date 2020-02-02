@@ -33,7 +33,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
         val cocktailsListIntent = Intent(this, CocktailsListActivity::class.java)
 
-        if (search != null) {
+        if (search != null && search.replace(" ", "") != "") {
             cocktailsListIntent.putExtra("Search", search)
         }
 
