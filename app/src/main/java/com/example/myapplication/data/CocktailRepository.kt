@@ -3,6 +3,7 @@ package com.example.myapplication.data
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import com.example.myapplication.COCKTAILS_WEB_SERVICE_URL
@@ -17,38 +18,44 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class CocktailRepository (val app: Application) {
 
     val cocktailsList = MutableLiveData<List<Cocktail>>()
-
-    private val listType = Types.newParameterizedType(
-        List::class.java, Cocktail::class.java
-    )
+    private val cocktailDao = CocktailDatabase.getDatabase(app).cocktailDao()
 
     fun refreshCocktailsData(search: String?) {
+
         CoroutineScope(Dispatchers.IO).launch {
-            getCocktailData(search)
+            val data = cocktailDao.getAll()
+            if(networkAvailable()) {
+                getCocktailDataFromWebservice(search)
+                Log.d("DEBUGDATA", "Using Network")
+            } else if (!data.isEmpty()) {
+                cocktailsList.postValue(data)
+                Log.d("DEBUGDATA", "Using Database")
+            }
         }
     }
 
     @WorkerThread
-    suspend fun getCocktailData(search: String?) {
-        if (networkAvailable()) {
+    suspend fun getCocktailDataFromWebservice(search: String?) {
+        val converterFactory = MoshiConverterFactory.create()
 
-            val converterFactory = MoshiConverterFactory.create()
+        val retrofit = Retrofit.Builder()
+            .addConverterFactory(converterFactory)
+            .baseUrl(COCKTAILS_WEB_SERVICE_URL)
+            .build()
+        val service = retrofit.create(CocktailService::class.java)
 
-            val retrofit = Retrofit.Builder()
-                .addConverterFactory(converterFactory)
-                .baseUrl(COCKTAILS_WEB_SERVICE_URL)
-                .build()
-            val service = retrofit.create(CocktailService::class.java)
+        val cocktailsData: List<Cocktail>?
 
-            val cocktailsData: List<Cocktail>?
+        if (search != null) {
+            cocktailsData = service.getCocktailsBySearch(search).body()?.drinks
+        } else {
+            cocktailsData = service.getCocktailsByFirstName("a").body()?.drinks
+        }
+        cocktailsList.postValue(cocktailsData ?: emptyList())
 
-            if (search != null) {
-                cocktailsData = service.getCocktailsBySearch(search).body()?.drinks
-            } else {
-                cocktailsData = service.getCocktailsByFirstName("a").body()?.drinks
-            }
-
-            cocktailsList.postValue(cocktailsData ?: emptyList())
+        if (cocktailsData != null) {
+            cocktailDao.deleteAll()
+            cocktailDao.insertCocktails(cocktailsData)
         }
     }
 
