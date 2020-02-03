@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
+//Objet Cocktail
 @Entity(tableName = "cocktails")
 data class Cocktail (
     @PrimaryKey(autoGenerate = true)

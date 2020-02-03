@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+//Objet RoomDatabase, permet de créer une base de données SQLite via la librairie Room
 @Database(entities = [Cocktail::class], version = 1, exportSchema = false)
 abstract class CocktailDatabase: RoomDatabase() {
 

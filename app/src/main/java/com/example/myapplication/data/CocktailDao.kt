@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 
+//Data Access Object, permet d'exécuter des méthodes dans la base de données
 @Dao
 interface CocktailDao {
 

@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.myapplication.data.Cocktail
 
+//Activité affichant les détails du cocktail (Photo et titre)
 class CocktailsDetailsActivity : AppCompatActivity() {
 
     private val picture: ImageView by lazy { findViewById<ImageView>(R.id.picture) }
@@ -15,6 +16,7 @@ class CocktailsDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cocktails_details)
 
+        //Si un objet cocktail est passé dans l'Intent, on l'utilise pour paramétrer les éléments d'interface
         if (intent.hasExtra("Cocktail")) {
 
             val cocktail: Cocktail = intent.getSerializableExtra("Cocktail") as Cocktail
